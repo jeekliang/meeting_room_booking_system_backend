@@ -1,7 +1,15 @@
-import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { Role } from './entities/role.entity';
+import { Permission } from './entities/permission.entity';
 import { RedisService } from 'src/redis/redis.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { md5 } from 'src/utils';
@@ -12,6 +20,12 @@ export class UserService {
 
   @InjectRepository(User)
   private userRepository: Repository<User>;
+
+  @InjectRepository(Role)
+  private roleRepository: Repository<Role>;
+
+  @InjectRepository(Permission)
+  private permissionRepository: Repository<Permission>;
 
   @Inject(RedisService)
   private redisService: RedisService;
@@ -25,8 +39,8 @@ export class UserService {
       throw new HttpException('验证码不正确', HttpStatus.BAD_REQUEST);
     }
     const foundUser = await this.userRepository.findOneBy({
-      username: user.username
-    })
+      username: user.username,
+    });
     if (foundUser) {
       throw new HttpException('用户已注册', HttpStatus.BAD_REQUEST);
     }
@@ -39,7 +53,7 @@ export class UserService {
       await this.userRepository.save(newUser);
       return '注册成功';
     } catch (error) {
-      this.logger.error(error, UserService)
+      this.logger.error(error, UserService);
       return '注册失败';
     }
   }
