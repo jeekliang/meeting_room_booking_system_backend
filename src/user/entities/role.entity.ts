@@ -1,8 +1,14 @@
-import { Column, PrimaryGeneratedColumn, JoinTable, ManyToMany, Entity } from "typeorm";
-import { Permission } from "./permission.entity";
+import {
+  Column,
+  PrimaryGeneratedColumn,
+  JoinTable,
+  ManyToMany,
+  Entity,
+} from 'typeorm';
+import { Permission } from './permission.entity';
 
 @Entity({
-  name: 'roles'
+  name: 'roles',
 })
 export class Role {
   @PrimaryGeneratedColumn()
@@ -10,13 +16,13 @@ export class Role {
 
   @Column({
     length: 50,
-    comment: "角色名",
+    comment: '角色名',
   })
   name: string;
 
   @ManyToMany(() => Permission)
   @JoinTable({
-    name: "role_permission",
+    name: 'role_permission',
   })
-  permission: Permission[];
+  permissions: Permission[];
 }

@@ -1,8 +1,15 @@
-import { Column, PrimaryGeneratedColumn, CreateDateColumn, Entity, JoinTable, ManyToMany } from "typeorm";
-import { Role } from "./role.entity";
+import {
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+} from 'typeorm';
+import { Role } from './role.entity';
 
 @Entity({
-  name: 'users'
+  name: 'users',
 })
 export class User {
   @PrimaryGeneratedColumn()
@@ -10,64 +17,64 @@ export class User {
 
   @Column({
     length: 50,
-    comment: "用户名",
+    comment: '用户名',
   })
   username: string;
 
   @Column({
     length: 50,
-    comment: "密码",
+    comment: '密码',
   })
   password: string;
 
   @Column({
-    name: 'nick_name',
+    name: 'nickName',
     length: 50,
-    comment: "昵称",
+    comment: '昵称',
   })
   nickName: string;
 
   @Column({
     length: 50,
-    comment: "邮箱",
+    comment: '邮箱',
   })
   email: string;
 
   @Column({
     length: 50,
-    comment: "头像",
-    nullable: true
+    comment: '头像',
+    nullable: true,
   })
   headPic: string;
 
   @Column({
     nullable: true,
     length: 20,
-    comment: "手机号",
+    comment: '手机号',
   })
-  phone_number: string;
+  phoneNumber: string;
 
   @Column({
     default: false,
-    comment: "是否冻结",
+    comment: '是否冻结',
   })
   isFrozen: boolean;
 
   @Column({
     default: false,
-    comment: "是否是管理员",
+    comment: '是否是管理员',
   })
-  is_admin: boolean;
+  isAdmin: boolean;
 
   @CreateDateColumn()
-  create_time: Date;
+  createTime: Date;
 
   @CreateDateColumn()
-  update_time: Date;
+  updateTime: Date;
 
   @ManyToMany(() => Role)
   @JoinTable({
-    name: 'user_role'
+    name: 'user_role',
   })
-  roles: Role[]
+  roles: Role[];
 }

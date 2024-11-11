@@ -15,7 +15,7 @@ import { EmailModule } from './email/email.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: 'src/.env'
+      envFilePath: 'src/.env',
     }),
     TypeOrmModule.forRootAsync({
       useFactory(configService: ConfigService) {
@@ -32,15 +32,15 @@ import { EmailModule } from './email/email.module';
           poolSize: 10,
           connectorPackage: 'mysql2',
           extra: {
-            authPlugins: 'sha256_password'
-          }
-        }
+            authPlugins: 'sha256_password',
+          },
+        };
       },
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
     UserModule,
     RedisModule,
-    EmailModule
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
