@@ -7,10 +7,8 @@ import { Permission } from './entities/permission.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([User, Role, Permission])
-  ],
+  imports: [TypeOrmModule.forFeature([User, Role, Permission])],
   controllers: [UserController],
   providers: [UserService],
 })
-export class UserModule {}
+export class UserModule { }
