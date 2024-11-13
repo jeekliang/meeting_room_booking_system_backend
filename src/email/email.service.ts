@@ -13,10 +13,10 @@ export class EmailService {
     // 检查是否重复发送
     const inRedis = await this.redisService.get(`captcha_${address}`);
     if (inRedis) {
-      throw new HttpException('请2分钟后再试！', HttpStatus.BAD_REQUEST);
+      throw new HttpException('请5分钟后再试！', HttpStatus.BAD_REQUEST);
     }
     const code = Math.random().toString().slice(2, 8);
-    await this.redisService.set(`captcha_${address}`, code, 1 * 60);
-    return `邮箱验证码：${code}`
+    await this.redisService.set(`captcha_${address}`, code, 5 * 60);
+    return `邮箱验证码：${code}`;
   }
 }
