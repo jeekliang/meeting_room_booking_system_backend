@@ -9,6 +9,11 @@ import { CustomExceptionFilter } from './custom-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const expressApp = app.getHttpAdapter().getInstance();
+  // 禁用 ETag
+  expressApp.disable('etag');
+
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new FormatResponseInterceptor());
   app.useGlobalInterceptors(new InvokeRecordInterceptor());
