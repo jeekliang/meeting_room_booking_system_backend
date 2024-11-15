@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
@@ -14,6 +14,7 @@ import { EmailModule } from './email/email.module';
 import { APP_GUARD } from '@nestjs/core';
 import { LoginGuard } from './login.guard';
 import { PermissionGuard } from './permission.guard';
+import { CacheControlMiddleware } from './cache-control.middleware';
 
 @Module({
   imports: [
@@ -71,4 +72,8 @@ import { PermissionGuard } from './permission.guard';
     },
   ],
 })
-export class AppModule { }
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CacheControlMiddleware).forRoutes('*');
+  }
+}
