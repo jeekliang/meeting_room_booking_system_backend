@@ -11,12 +11,12 @@ export class EmailService {
       throw new HttpException('缺少email字段', HttpStatus.BAD_REQUEST);
     }
     // 检查是否重复发送
-    const inRedis = await this.redisService.get(`captcha_${address}`);
+    const inRedis = await this.redisService.get(`register_captcha_${address}`);
     if (inRedis) {
       throw new HttpException('请5分钟后再试！', HttpStatus.BAD_REQUEST);
     }
     const code = Math.random().toString().slice(2, 8);
-    await this.redisService.set(`captcha_${address}`, code, 5 * 60);
+    await this.redisService.set(`register_captcha_${address}`, code, 10 * 60);
     return `邮箱验证码：${code}`;
   }
 }

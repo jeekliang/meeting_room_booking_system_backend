@@ -51,6 +51,8 @@ import { CacheControlMiddleware } from './cache-control.middleware';
           extra: {
             authPlugins: 'sha256_password',
           },
+          retryAttempts: 5, // 设置重试次数
+          retryDelay: 3000, // 设置重试延迟（毫秒）
         };
       },
       inject: [ConfigService],
