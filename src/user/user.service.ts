@@ -6,17 +6,17 @@ import {
   Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like } from 'typeorm';
-import { User } from './entities/user.entity';
-import { Role } from './entities/role.entity';
-import { Permission } from './entities/permission.entity';
 import { RedisService } from 'src/redis/redis.service';
-import { RegisterUserDto } from './dto/register-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
-import { LoginUserVo } from './vo/login-user.vo';
 import { md5 } from 'src/utils';
-import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
+import { Like, Repository } from 'typeorm';
+import { LoginUserDto } from './dto/login-user.dto';
+import { RegisterUserDto } from './dto/register-user.dto';
 import { UpdateUserDto } from './dto/udpate-user.dto';
+import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
+import { Permission } from './entities/permission.entity';
+import { Role } from './entities/role.entity';
+import { User } from './entities/user.entity';
+import { LoginUserVo } from './vo/login-user.vo';
 
 @Injectable()
 export class UserService {
@@ -137,12 +137,9 @@ export class UserService {
     return user;
   }
 
-  async updateUserPassword(
-    userId: number,
-    updateUserPassword: UpdateUserPasswordDto,
-  ) {
+  async updateUserPassword(updateUserPassword: UpdateUserPasswordDto) {
     const captcha = await this.redisService.get(
-      `captcha_${updateUserPassword.email}`,
+      `update_password_captcha_${updateUserPassword.email}`,
     );
     if (!captcha) {
       throw new HttpException('验证码已失效', HttpStatus.BAD_REQUEST);
@@ -151,8 +148,11 @@ export class UserService {
       throw new HttpException('验证码错误', HttpStatus.BAD_REQUEST);
     }
     const foundUser = await this.userRepository.findOneBy({
-      id: userId,
+      username: updateUserPassword.username,
     });
+    if (foundUser.email !== updateUserPassword.email) {
+      throw new HttpException('用户名与邮箱不匹配', HttpStatus.BAD_REQUEST);
+    }
     foundUser.password = md5(updateUserPassword.password);
     try {
       await this.userRepository.save(foundUser);
